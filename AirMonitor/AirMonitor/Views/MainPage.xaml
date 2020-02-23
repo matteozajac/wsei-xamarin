@@ -1,0 +1,182 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="AirMonitor.Views.MainPage"
+             xmlns:controls="clr-namespace:AirMonitor.Views.Controls"
+             BackgroundColor="#f9f9f9">
+
+    <ScrollView>
+        <Grid>
+            <StackLayout
+                Padding="24"
+                Spacing="12">
+                <Frame
+                    CornerRadius="50"
+                    Padding="0"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    HeightRequest="100"
+                    WidthRequest="100"
+                    HasShadow="False"
+                    BackgroundColor="#33f069"
+                    BorderColor="Gray">
+                    <Label
+                     HorizontalTextAlignment="Center"
+                        VerticalTextAlignment="Center">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span
+                                    Text="56"
+                                    FontAttributes="Bold"
+                                    TextColor="Black"
+                                    FontSize="32"/>
+                                <Span
+                                    Text="{x:Static x:Environment.NewLine}"/>
+                                <Span
+                                    Text="CAQI"
+                                    FontSize="12"
+                                    TextColor="DarkSlateGray"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                </Frame>
+                <Label
+                    Text="Świetna jakość!"
+                    FontSize="20"
+                    TextColor="Black"
+                    FontAttributes="Bold"
+                    HorizontalTextAlignment="Center"/>
+                <Label
+                    Text="Możesz bezpiecznie wyjść z domu bez swojej maski anty-smogowej i nie bać się o swoje zdrowie."
+                    FontSize="14"
+                    TextColor="Black" />
+
+                <BoxView
+                    HeightRequest="1"
+                    HorizontalOptions="Fill"
+                    BackgroundColor="LightGray"/>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="25"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <controls:ContentWithHeader Title="PM 2,5">
+                        <controls:ContentWithHeader.ControlContent>
+                            <Label>
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span
+                                            Text="34"
+                                            TextColor="Black"
+                                            FontSize="20"/>
+                                        <Span
+                                            Text=" mg/m3 "
+                                            TextColor="Black"
+                                            FontSize="14"/>
+                                        <Span
+                                            Text="(137%)"
+                                            TextColor="Black"
+                                            FontSize="20"/>
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                        </controls:ContentWithHeader.ControlContent>
+                    </controls:ContentWithHeader>
+                
+                    <BoxView
+                        Grid.Column="1"
+                        VerticalOptions="Fill"
+                        HorizontalOptions="Center"
+                        WidthRequest="1"
+                        BackgroundColor="LightGray"/>
+                    
+                    
+                    <controls:ContentWithHeader
+                        Title="PM 10"
+                        Grid.Column="2">
+                        <controls:ContentWithHeader.ControlContent>
+                            <Label>
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span
+                                            Text="67"
+                                            TextColor="Black"
+                                            FontSize="20"/>
+                                        <Span
+                                            Text=" mg/m3 "
+                                            TextColor="Black"
+                                            FontSize="14"/>
+                                        <Span
+                                            Text="(135%)"
+                                            TextColor="Black"
+                                            FontSize="20"/>
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                        </controls:ContentWithHeader.ControlContent>
+                    </controls:ContentWithHeader>
+                </Grid>
+
+                
+                <BoxView
+                    HeightRequest="1"
+                    HorizontalOptions="Fill"
+                    BackgroundColor="LightGray"/>
+                <controls:ContentWithHeader Title="Wilgotność">
+                    <controls:ContentWithHeader.ControlContent>
+                        <StackLayout>
+                            <Label
+                                Text="95%"
+                                FontSize="20"
+                                TextColor="Black" />
+                            <Slider
+                                Value="0.95"
+                                MaximumTrackColor="Gray"
+                                MinimumTrackColor="CornflowerBlue"
+                                ThumbColor="CornflowerBlue"/>
+                        </StackLayout>
+                    </controls:ContentWithHeader.ControlContent>
+                </controls:ContentWithHeader>
+                
+                <BoxView
+                    HeightRequest="1"
+                    HorizontalOptions="Fill"
+                    BackgroundColor="LightGray"/>
+                <controls:ContentWithHeader Title="Ciśnienie">
+                    <controls:ContentWithHeader.ControlContent>
+                        <StackLayout>
+                            <Label
+                                Text="1026 hPa"
+                                FontSize="20"
+                                TextColor="Black" />
+                            <!-- Set Maximum before Minimum in Slider -->
+                            <Slider
+                                Maximum="1100"
+                                Minimum="900"
+                                Value="1026"
+                                MaximumTrackColor="Gray"
+                                MinimumTrackColor="CornflowerBlue"
+                                ThumbColor="CornflowerBlue"/>
+                        </StackLayout>
+                    </controls:ContentWithHeader.ControlContent>
+                </controls:ContentWithHeader>
+            </StackLayout>
+
+            <ImageButton
+                Padding="12,24"
+                HorizontalOptions="End"
+                VerticalOptions="Start"
+                WidthRequest="48"
+                HeightRequest="72"
+                BackgroundColor="Transparent"
+                Source="baseline_help_outline_black_24.png"
+                Clicked="Help_Clicked"/>
+        </Grid>
+    </ScrollView>
+
+</ContentPage>
