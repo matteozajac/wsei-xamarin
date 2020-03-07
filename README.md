@@ -8,11 +8,11 @@
 
 ## Zadania
 ### 1.	Stworzenie pierwszego projektu Xamarin.Forms
-a.	W Visual Studio 2019 kliknij „Create a new project” i wyszukaj “Xamarin.Forms”
-b.	Wybierz “Mobile App (Xamarin.Forms)” I kliknij Next
-c.	Wpisz nazwę projektu I kliknij Create
-d.	W kolejnym okienku wybierz szablon „Blank” i zaznacz platformy Android oraz iOS. Kliknij Ok.
-e.	Wybierz projekt Androida jako startowy i uruchom go w emulatorze.
+- W Visual Studio 2019 kliknij „Create a new project” i wyszukaj “Xamarin.Forms”
+- Wybierz “Mobile App (Xamarin.Forms)” I kliknij Next
+- Wpisz nazwę projektu I kliknij Create
+- W kolejnym okienku wybierz szablon „Blank” i zaznacz platformy Android oraz iOS. Kliknij Ok.
+- Wybierz projekt Androida jako startowy i uruchom go w emulatorze.
 ### 2.	Przejrzyj nowy projekt i zapoznaj się z jego elementami
 #### Projekt „AirMonitor”:
 - App.xaml – plik z zasobami globalnymi na poziomie aplikacji
