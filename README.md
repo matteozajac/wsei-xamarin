@@ -65,3 +65,17 @@
 -	Widoki dla PM 2,5 oraz PM 10 mają równą szerokość i pionową linię między nimi. Jakiego layoutu użyjesz? Musisz zdefiniować 3 kolumny.
 -	Ikonka “?” po prawej stronie to przycisk - niech po naciśnięciu wyświetla popup z przykładowym wyjaśnieniem czym jest CAQI. Możesz tu użyć wbudowanej metody DisplayAlert.
 -	Podwidoki dla PM 2,5, PM 10 i kolejnych wyglądają tak samo - mają tytuł i pewną zawartość - stwórz dla nich nową kontrolkę (w oddzielnym pliku) i zaembedu w widoku głównym. W kontrolce użyj BindableProperty w dwóch właściwościach - jedna do zbindowania tytułu, druga do zbindowania dowolnej zawartości (możesz to zostawić na koniec).
+
+### Efekt końcowy: 
+<img src="https://github.com/matteozajac/wsei-xamarin/blob/lab1/lab1_screen.png" width="250">
+
+## Przydatne materiały: 
+- Kontrolki (strony, layouty, widoki): https://docs.microsoft.com/pl-pl/xamarin/xamarin-forms/user-interface/controls/ 
+- Formatowanie tekstu w Label: https://docs.microsoft.com/pl-pl/xamarin/xamarin-forms/user-interface/text/label#formatted-text 
+- Własne kontrolki: https://docs.microsoft.com/pl-pl/xamarin/xamarin-forms/user-interface/layouts/contentview 
+- Podstawy XAML: https://docs.microsoft.com/pl-pl/xamarin/xamarin-forms/xaml/xaml-basics/
+
+## Dodatkowe materiały: 
+- Cykl życia aplikacji Xamarin.Forms: https://docs.microsoft.com/pl-pl/xamarin/xamarin-forms/app-fundamentals/app-lifecycle 
+- Android Resources: https://docs.microsoft.com/pl-pl/xamarin/android/app-fundamentals/resources-in-android/?tabs=windows 
+- Android Manifest w Xamarinie: https://docs.microsoft.com/pl-pl/xamarin/android/platform/android-manifest
