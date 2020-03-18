@@ -79,3 +79,11 @@
 - Cykl życia aplikacji Xamarin.Forms: https://docs.microsoft.com/pl-pl/xamarin/xamarin-forms/app-fundamentals/app-lifecycle 
 - Android Resources: https://docs.microsoft.com/pl-pl/xamarin/android/app-fundamentals/resources-in-android/?tabs=windows 
 - Android Manifest w Xamarinie: https://docs.microsoft.com/pl-pl/xamarin/android/platform/android-manifest
+
+## Instalacja Xamarina
+- Instrukcja instalacji: https://docs.microsoft.com/pl-pl/xamarin/get-started/installation/windows
+- Jeśli mamy już zainstalowane Android Studio, to Visual Studio najprawdopodobniej zainstaluje SDK Androida w innym miejscu, a więc emulatory z Android Studio nie będą widoczne w Visualu - można taki emulator włączyć z linii komend lub z Android Studio i wtedy będzie dostępny z Visuala
+- Dodawanie nowych emulatorów Androida: https://docs.microsoft.com/pl-pl/xamarin/android/get-started/installation/android-emulator/device-manager?tabs=windows&pivots=windows
+- Przyspieszenie sprzętowe dla emulatorów (możesz to sprawdzić, jeśli emulator działa bardzo wolno): https://docs.microsoft.com/pl-pl/xamarin/android/get-started/installation/android-emulator/hardware-acceleration?pivots=windows
+- Popularne problemy z emulatorami: https://docs.microsoft.com/pl-pl/xamarin/android/get-started/installation/android-emulator/troubleshooting?pivots=windows
+- Odpalanie aplikacji Androida na urządzeniu: https://docs.microsoft.com/pl-pl/xamarin/android/get-started/installation/set-up-device-for-development
