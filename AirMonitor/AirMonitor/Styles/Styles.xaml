@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <Style TargetType="ContentPage" x:Key="DetailsPageStyle">
+        <Setter Property="BackgroundColor" Value="{StaticResource DetailsBackgroundColor}"/>
+    </Style>
+            
+    <Style TargetType="StackLayout" x:Key="DetailsLayoutStyle">
+        <Setter Property="Padding" Value="24"/>
+        <Setter Property="Spacing" Value="12"/>
+    </Style>
+
+    <Style TargetType="Label" x:Key="CenteredTextStyle">
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style TargetType="Frame" x:Key="CaqiFrameStyle">
+        <Setter Property="CornerRadius" Value="50"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="HeightRequest" Value="100"/>
+        <Setter Property="WidthRequest" Value="100"/>
+        <Setter Property="HasShadow" Value="False"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource CaqiGoodColor}"/>
+        <Setter Property="BorderColor" Value="{StaticResource CaqiFrameBorderColor}"/>
+    </Style>
+
+    <Style TargetType="Span" x:Key="CaqiValueSpanStyle">
+        <Setter Property="TextColor" Value="{StaticResource PrimaryColor}"/>
+        <Setter Property="FontSize" Value="32"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+    </Style>
+
+    <Style TargetType="Span" x:Key="CaqiUnitSpanStyle">
+        <Setter Property="TextColor" Value="{StaticResource SecondaryColor}"/>
+        <Setter Property="FontSize" Value="12"/>
+    </Style>
+
+    <Style TargetType="Label" x:Key="CaqiTitleStyle">
+        <Setter Property="TextColor" Value="{StaticResource PrimaryColor}"/>
+        <Setter Property="FontSize" Value="20"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+    </Style>
+
+    <Style TargetType="Label" x:Key="CaqiDescriptionStyle">
+        <Setter Property="TextColor" Value="{StaticResource PrimaryColor}"/>
+        <Setter Property="FontSize" Value="14"/>
+    </Style>
+
+    <Style TargetType="BoxView" x:Key="HorizontalSeparatorStyle">
+        <Setter Property="BackgroundColor" Value="{StaticResource TertiaryColor}"/>
+        <Setter Property="HeightRequest" Value="1"/>
+        <Setter Property="HorizontalOptions" Value="Fill"/>
+    </Style>
+
+    <Style TargetType="BoxView" x:Key="VerticalSeparatorStyle">
+        <Setter Property="BackgroundColor" Value="{StaticResource TertiaryColor}"/>
+        <Setter Property="WidthRequest" Value="1"/>
+        <Setter Property="VerticalOptions" Value="Fill"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+    </Style>
+
+    <Style TargetType="Label" x:Key="NormalTextLabelStyle">
+        <Setter Property="TextColor" Value="{StaticResource PrimaryColor}"/>
+        <Setter Property="FontSize" Value="20"/>
+    </Style>
+
+    <Style TargetType="Label" x:Key="SmallTextLabelStyle">
+        <Setter Property="TextColor" Value="{StaticResource PrimaryColor}"/>
+        <Setter Property="FontSize" Value="14"/>
+    </Style>
+
+    <Style TargetType="Span" x:Key="NormalTextSpanStyle">
+        <Setter Property="TextColor" Value="{StaticResource PrimaryColor}"/>
+        <Setter Property="FontSize" Value="20"/>
+    </Style>
+
+    <Style TargetType="Span" x:Key="SmallTextSpanStyle">
+        <Setter Property="TextColor" Value="{StaticResource PrimaryColor}"/>
+        <Setter Property="FontSize" Value="14"/>
+    </Style>
+
+    <Style TargetType="Slider" x:Key="SliderStyle">
+        <Setter Property="MaximumTrackColor" Value="{StaticResource SliderTrackBackgroundColor}"/>
+        <Setter Property="MinimumTrackColor" Value="{StaticResource SliderAccentColor}"/>
+        <Setter Property="ThumbColor" Value="{StaticResource SliderAccentColor}"/>
+    </Style>
+
+    <Style TargetType="ImageButton" x:Key="HelpButtonStyle">
+        <Setter Property="Padding" Value="12,24"/>
+        <Setter Property="HorizontalOptions" Value="End"/>
+        <Setter Property="VerticalOptions" Value="Start"/>
+        <Setter Property="WidthRequest" Value="48"/>
+        <Setter Property="HeightRequest" Value="72"/>
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+    </Style>
+</ResourceDictionary>

@@ -17,8 +17,14 @@
   <ItemGroup>
     <Folder Include="Views\" />
     <Folder Include="Views\Controls\" />
+    <Folder Include="Styles\" />
+    <Folder Include="ViewModels\" />
+    <Folder Include="Converters\" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Remove="MainPage.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Converters\StringFormatConverter.cs" />
   </ItemGroup>
 </Project>

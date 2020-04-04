@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    <Color x:Key="DetailsBackgroundColor">#f9f9f9</Color>
+    <Color x:Key="PrimaryColor">Black</Color>
+    <Color x:Key="SecondaryColor">DarkSlateGray</Color>
+    <Color x:Key="TertiaryColor">LightGray</Color>
+    <Color x:Key="CaqiGoodColor">#33f069</Color>
+    <Color x:Key="CaqiFrameBorderColor">Gray</Color>
+    <Color x:Key="SliderAccentColor">CornflowerBlue</Color>
+    <Color x:Key="SliderTrackBackgroundColor">Gray</Color>
+</ResourceDictionary>

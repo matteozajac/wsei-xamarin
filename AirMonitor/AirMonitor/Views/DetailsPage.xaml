@@ -1,0 +1,144 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="AirMonitor.Views.DetailsPage"
+             xmlns:controls="clr-namespace:AirMonitor.Views.Controls"
+             xmlns:viewModels="clr-namespace:AirMonitor.ViewModels"
+             xmlns:converters="clr-namespace:AirMonitor.Converters"
+             Title="Details Page"
+             Style="{StaticResource DetailsPageStyle}">
+    <ContentPage.BindingContext>
+        <viewModels:DetailsViewModel/>
+    </ContentPage.BindingContext>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:ValueToPercentConverter x:Key="ValueToPercent"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <Grid>
+            <StackLayout Style="{StaticResource DetailsLayoutStyle}">
+                <Frame Style="{StaticResource CaqiFrameStyle}">
+                    <Label Style="{StaticResource CenteredTextStyle}">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span
+                                    Text="{Binding CaqiValue}"
+                                    Style="{StaticResource CaqiValueSpanStyle}"/>
+                                <Span
+                                    Text="{x:Static x:Environment.NewLine}"/>
+                                <Span
+                                    Text="CAQI"
+                                    Style="{StaticResource CaqiUnitSpanStyle}"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                </Frame>
+                <Label
+                    Text="{Binding CaqiTitle}"
+                    Style="{StaticResource CaqiTitleStyle}"/>
+                <Label
+                    Text="{Binding CaqiDescription}"
+                    Style="{StaticResource CaqiDescriptionStyle}" />
+
+                <BoxView Style="{StaticResource HorizontalSeparatorStyle}"/>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="25"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <controls:ContentWithHeader Title="PM 2,5">
+                        <controls:ContentWithHeader.ControlContent>
+                            <Label>
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span
+                                            Text="{Binding Pm25Value}"
+                                            Style="{StaticResource NormalTextSpanStyle}"/>
+                                        <Span
+                                            Text=" mg/m3 "
+                                            Style="{StaticResource SmallTextSpanStyle}"/>
+                                        <Span
+                                            Text="{Binding Pm25Percent, StringFormat='({0}%)'}"
+                                            Style="{StaticResource NormalTextSpanStyle}"/>
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                        </controls:ContentWithHeader.ControlContent>
+                    </controls:ContentWithHeader>
+                
+                    <BoxView
+                        Grid.Column="1"
+                        Style="{StaticResource VerticalSeparatorStyle}" />
+                    
+                    
+                    <controls:ContentWithHeader
+                        Title="PM 10"
+                        Grid.Column="2">
+                        <controls:ContentWithHeader.ControlContent>
+                            <Label>
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span
+                                            Text="{Binding Pm10Value}"
+                                            Style="{StaticResource NormalTextSpanStyle}"/>
+                                        <Span
+                                            Text=" mg/m3 "
+                                            Style="{StaticResource SmallTextSpanStyle}"/>
+                                        <Span
+                                            Text="{Binding Pm10Percent, StringFormat='({0}%)'}"
+                                            Style="{StaticResource NormalTextSpanStyle}"/>
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                        </controls:ContentWithHeader.ControlContent>
+                    </controls:ContentWithHeader>
+                </Grid>
+
+                
+                <BoxView Style="{StaticResource HorizontalSeparatorStyle}"/>
+                <controls:ContentWithHeader Title="Wilgotność">
+                    <controls:ContentWithHeader.ControlContent>
+                        <StackLayout>
+                            <Label
+                                Text="{Binding HumidityValue, Converter={StaticResource ValueToPercent}, StringFormat='{0}%'}"
+                                Style="{StaticResource NormalTextLabelStyle}"/>
+                            <Slider
+                                Value="{Binding HumidityValue}"
+                                Style="{StaticResource SliderStyle}"/>
+                        </StackLayout>
+                    </controls:ContentWithHeader.ControlContent>
+                </controls:ContentWithHeader>
+                
+                <BoxView Style="{StaticResource HorizontalSeparatorStyle}"/>
+                <controls:ContentWithHeader Title="Ciśnienie">
+                    <controls:ContentWithHeader.ControlContent>
+                        <StackLayout>
+                            <Label
+                                Text="{Binding PressureValue, StringFormat='{0} hPa'}"
+                                Style="{StaticResource NormalTextLabelStyle}"/>
+                            <!-- Set Maximum before Minimum in Slider -->
+                            <Slider
+                                Maximum="1100"
+                                Minimum="900"
+                                Value="1026"
+                                Style="{StaticResource SliderStyle}"/>
+                        </StackLayout>
+                    </controls:ContentWithHeader.ControlContent>
+                </controls:ContentWithHeader>
+            </StackLayout>
+
+            <ImageButton
+                Style="{StaticResource HelpButtonStyle}"
+                Source="baseline_help_outline_black_24.png"
+                Clicked="Help_Clicked"/>
+        </Grid>
+    </ScrollView>
+
+</ContentPage>
