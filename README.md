@@ -1,121 +1,159 @@
-# Laboratorium 3
-  
-## Zagadnienia  
-  
-- Widok listy (ListView)
+# Laboratorium 4 
 
-- Połączenie z API i pobieranie danych
+## Zagadnienia 
 
-- Rejestracja do Airly API
-  
-## Zadania  
+- Lokalna baza danych – SQLite 
 
-### 1. Zarejestruj się do api Airly - Adres: https://developer.airly.eu
+## Zadania 
 
-- Załóż konto i zapoznaj się z sekcją Concepts w dokumentacji.
+### 1. Zainstaluj paczkę do bazy danych. 
 
-### 2. Pobierz swoją lokalizację z telefonu.
+- Zainstaluj do projektu wspólnego oraz androidowego paczkę nuget sqlite-net-pcl. 
 
-- Wykorzystaj element Geolocation biblioteki Xamarin.Essentials (jest domyślnie zainstalowana w nowym projekcie Xamarin.Forms przez nuget) do pobrania własnej lokalizacji - będzie potrzebna do zapyta w Airly API.
+### 2. Stwórz model bazy danych. 
 
-### 3. Stwórz zapytania do API Airly.
+- Paczka, której używamy nie wspiera relacji, musimy więc stworzyć je ręcznie. Nie możemy polegać na właściwościach o pożądanym typie, tylko na kluczach. 
 
-- UWAGA: Api Airly ma limit 100 requestów na dzien. Pamiętaj, żeby nie przekroczyć limitu albo będzie ci trudniej dokonczyć ćwiczenie.
+- Nie możemy przechowywać także list, więc najlepiej przerobić je na właściwość typu string i zserializować np. do jsona. 
 
-- Wykorzystaj klasę HttpClient do obsługi requestów do API.
+- Możemy użyć istniejących klas AirQualityIndex, AirQualityStandard i MeasurementValue. Dodajmy tylko do nich właściwość Id typu int z atrybutami PrimaryKey i AutoIncrement. 
 
-- Dodaj do instancji HttpClient niezbędne nagłówki (wymienione w dokumentacji).
+- Dla klas Installation, MeasurementItem i Measurement stwórzmy nowe klasy, np. z dopiskiem Entity w nazwie.  
 
-- Wykonaj zapytanie Get do endpointu: Installations -> Nearest - najlepiej utwórz limit zwracanych wyników na 1. Na razie więcej nie będzie potrzebne.
+- W każdej musimy dodać Id. W InstallationEntity Id można dać jako string (dostajemy je z API). 
 
-- Wyciągnij odpowiedź jako string. Na tej podstawie stwórz modele takie same jak zwrócone dane.
+- W InstallationEntity Location i Address można dać jako string - będziemy je serializować do jsona.  
 
-- Parsuj odpowiedź z HttpClient za pomocą biblioteki Newtonsoft.Json (pobierz ją z nugeta) na klasy, które stworzyłeś.
+- W MeasurementItemEntity wszystkie właściwości, które są tablicami, zamieniamy na stringi. Będziemy serializować do nich listy Id z właściwości Values, Indexes i Standards. 
 
-- Powtórz powyższe czynności dla innego endpointa z API: Measurements -> By ID - będziesz do niego potrzebował Id instalacji, które dostaniesz z pierwszego zapytania – najlepiej wykonać takie zapytania w pętli dla każdego id (w razie jak będziemy pobierać ich więcej).
+- W MeasurementEntity właściwości Current i Installation zamieniamy na ich Id (typ int). 
 
-- Proponowane modele: Measurement, MeasurementItem, MeasurementValue, AirQualityIndex, AirQualityStandard, Installation, Address
+- Reszta właściwości może pozostać bez zmian. 
 
-- Kontroluj ilość zapytan, która ci pozostała (wykorzystaj nagłówek X-RateLimit-Remaining-day - więcej w dokumentacji Airly).
+- Do wszystkich klas dodaj konstruktor bez parametrów. Później będziemy dodawać inne konstruktory, ale konstruktor bez parametrów też jest wymagany przez biblioteki do jsona i sqlita. 
 
-- Pamiętaj o obsłudze błędów przy robieniu zapytania, a także o sprawdzaniu zwróconego kodu http.
+### 3. Dodaj klasę pomocniczą do bazy danych. 
 
-- Możesz użyć UriBuilder i HttpUtility.ParseQueryString do stworzenia adresu url do zapytania, żeby zachować porządek.
+- Dodaj nową klasę DatabaseHelper. 
 
-### 4. View model – lista elementów.
+- Utwórz w nim połączenie do bazy SQLiteConnection i zapisz je w polu klasy. Żeby uniknąć problemów z wielowątkowością użyj flag SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.FullMutex do otwarcia połączenia. 
 
-- Z DetailsViewModel wydziel SetPropety i inne zależne rzeczy (w tym implementowany interfejs) do klasy bazowej, np. BaseViewModel – niech oba nasze view modele po nim dziedziczą.
+- Stwórz tabele dla wszystkich niezbędnych klas: InstallationEntity, MeasurementEntity, MeasurementItemEntity, MeasurementValue, AirQualityIndex, AirQualityStandard. 
 
-- W HomeViewModel stwórz właściwość listy z elementami takiego typu, jaki pobierasz w punkcie powyżej z api Airly (typ na który rzutujesz jsona z drugiego zapytania – do Measurements -> By ID).
+- Stwórz instancję klasy pomocniczej w App.xaml.cs, wywołaj metodę inicjaluzującą (to co robiliśmy w punktach wyżej) przed wczytaniem pierwszej strony i zapisz w statycznym polu - będziesz go później używać wszędzie, gdzie będziesz chciał skorzystać z bazy. 
 
-- Przypisz do właściwości pobrane elementy (lub na razie jakieś testowe, jeśli nie robisz punktów po kolei).
+### 4. Użyj klasy pomocniczej do zapisywania instalacji z API Airly. 
 
-- W typie elementu z listy dodaj referencję do instalacji, do której się ona odnosi (a więc Measurement powinien mieć odniesienie do Installation - będziemy potrzebować obu tych danych na widoku).
+- Stwórz w klasie pomocniczej nową metodę do zapisu danych. 
 
-### 5. Stworzenie widoku listy
+- W parametrze przekazuj listę obiektów Installation. 
 
-- Na stronie HomePage.xaml zamien przycisk na kontrolkę ListView.
+- Przemapuj te obiekty na InstallationEntity. Możesz stworzyć odpowiedni konstruktor w InstallationEntity. 
 
-- Dodaj bindowanie do właściwości ItemsSource z właściwości z poprzedniego punktu w view modelu.
+- W transakcji, wyczyść tabelę i zapisz nowe dane. 
 
-- Dodaj do listy ItemTemplate - może to być najprostszy TextCell lub własny widok stworzony z ViewCell.
+- Wywołaj metodę po pobraniu instalacji z api. 
 
-- W komórce w ItemTemplate zbinduj wartości z pojedynczych elementów z właściwości w view modelu (zbindowanego do ItemsSource listy). Możesz np. zbindować adres i obecną wartość CAQI (indeks w api).
+### 5. Użyj klasy pomocniczej do zapisywania pomiarów z API Airly. 
 
-### 6. Zaktualizuj odnośnik do strony szczegółów.
+- Stwórz w klasie pomocniczej nową metodę do zapisu danych. 
 
-- W ListView dodaj atrybut ItemTapped.
+- W parametrze przekazuj listę obiektów Measurement. 
 
-- W handlerze, który utworzył się w HomePage.xaml.cs wywołaj komendę GoToDetailsCommand.Execute z view modelu – view model możesz uzyskać z właściwości BindingContext (rzutowanie).
+- Wykonuj wszystkie operacje w transakcji. 
 
-- Jako paramter w metodzie Execute przekaż elemenet listy – znajduje się w parametrze ItemTappedEventArgs, we właściwości Item.
+- Usuń wszystkie poprzednie dane ze wszystkich tabel, oprócz tabeli z instalacjami. 
 
-- W komendzie w view modelu dodaj argument (Command to klasa generyczna).
+- W pętli, dla każdego pomiaru: 
 
-- Przekazuj argument z komendy do widoku szczegółów (zmodyfikuj konstruktor) i zapisuj go jako właściwość w DetailsViewModel.
+- Dodaj do bazy metodą InsertAll dane z właściwości Values, Indexes i Standards (dla obecnego pomiaru - właściwość Current). W InsertAll możesz przekazać w drugim parametrze, żeby nie używać transakcji – i tak już w jednej jesteśmy. Właściwości Id w dodanych obiektach ustawią się na nowe wartości. 
 
-### 7. Zaktualizuj dane na stronie szczegółów.
+- Przemapuj właściwość Current na MeasurementItemEntity i dodaj do bazy. 
 
-- Na podstawie przekazanego obiektu z punktu 6 uaktualnij wszystkie właściwości w view modelu strony szczegółów.
+- Stwórz i wypełnij obiekt MeasurementEntity i dodaj go do bazy. 
 
-- Wartości na stronie szczegółów możesz zaokrąglić za pomocą Math.Round do liczb całkowitych.
+- Wywołaj metodę po pobraniu instalacji z api. 
 
-- Wartość dla wilgotności powietrza otrzymujemy z api jako procent - wcześniej mieliśmy przygotowaną właściwość pod wartość - dostosuj właściwość (zmien nazwę) i konwerter, tak żeby zamieniał procent na wartość (dzielenie przez 100).
+### 6. Użyj klasy pomocniczej do odczytywania instalacji. 
 
-### 8. Utwórz plik konfiguracyjny
+- W nowej metodzie pobierz z bazy wszystkie obiekty typu InstallationEntity. Przemapuj je na typ Installation (np. przez odpowiedni konstruktor) i zwróć. 
 
-- Rzeczy takie jak urle i klucze do api dobrze jest wydzielić z kodu. Utwórz we wspólnym projekcie plik config.json i nadaj mu BuildAction EmbeddedResource.
+- Do właściwości Address i Location będziesz musiał zdeserializować jsona. 
 
-- W pliku wpisz adres do api i klucz do api.
+### 7. Użyj klasy pomocniczej do odczytywania pomiarów. 
 
-- Odczytaj plik w App.xaml.cs za pomocą metod GetManifestResourceNames i GetManifestResourceStream z klasy Assembly (wybierz bibliotekę, w której jest umieszczony plik konfiguracyjny) oraz jego zawartość za pomocą StreamReader i JObject.Parse - nie zapomnij zamknąć streamów.
+- W nowej metodzie pobierz z bazy wszystkie obiekty typu MeasurementEntity. 
 
-- Odczytane dane z pliku konfiguracyjnego możesz zapisać jako właściwości statyczne w App.xaml.cs.
+- Dla każdego id instalacji pobierz z bazy InstallationEntity o takim kluczu i przemapuj na typ Installation. 
 
-- Możesz również przenieść do pliku konfiguracyjnego adresy url do konkretnych endpointów - pomyśl jak możesz poradzić sobie z argumentami.
+- Dla każdego id obecnego MeasurementItemEntity, pobierz obiekt o takim kluczu z bazy i stwórz z niego MeasurementItem. 
 
-### 9. Dodaj loader.
+- Zdeserializuj wszystkie jsony na tablice intów. 
 
-- Podczas pobierania danych można dodać loader. Użyj kontrolki ActivityIndicator – zbinduj jej właściwości IsRunning i IsVisible do właściwości z view modelu.
+- Pobierz z bazy obiekty MeasurementValue, AirQualityIndex i AirQualityStandard z kluczami uzyskanymi w punkcie wyżej. 
 
-- W view modelu stwórz właściwość typu bool, którą będziesz ustawiać/resetować gdy dane się wczytują/już wczytają.
-  
-  
+- Stwórz z tych danych obiekt MeasurementItem 
+
+### 8. Użyj metod do pobierania danych z bazy w kodzie. 
+
+- Chcemy w pierwszej kolejności korzystać z danych w bazie. Jeśli będą one stare, wtedy chcemy pobierać dane z API Airly. Aktualność danych będziemy sprawdzać na podstawie właściwości Current.TillDateTime w pomiarze. Jeśli jest on starszy niż godzina, pobierzemy nowe dane. Jeśli nie, to wyświetlimy dane z bazy (nawet przy ponownym uruchomieniu aplikacji). 
+
+- Zwróć uwagę, że czas w API Airly jest w strefie UTC. 
+
+- W metodzie, gdzie pobierasz instalacje z API Airly (w HomeViewModel), użyj metody do odczytu pomiarów z bazy. Sprawdź czy są tam jakieś pomiary i czy właściwość TillDateTime ma odpowiednią wartość. Na tej postawie albo pobierz dane z API albo z bazy. 
+
+- Zrób podobną rzecz w metodzie, gdzie pobierasz pomiary z API. 
+
+- Właściwość CurrentDisplayValue  w pomiarze możesz mieć zapisane w bazie, ale niekoniecznie. Skoro i tak to obliczamy, to można tego pola nie trzymać w bazie, tylko dalej liczyć tutaj - niezależnie czy dla wyników z API, czy z bazy. 
+
+- Logikę sprawdzającą, czy pobieramy rzeczy z API, czy wczytujemy z bazy, możesz wydzielić do oddzielnej metody, gdyż w obu przypadkach będzie taka sama. 
+
+### 9. Zamknij połączenie do bazy. 
+
+- W aplikacjach mobilnych dobrze jest używać jednego połączenia do bazy i zamykać je dopiero, gdy kończymy z niego korzystać, np. gdy zamykamy aplikację. 
+
+- Zaimplementuj interfejs IDisposable w klasie pomocniczej do bazy danych. 
+
+- W metodzie Dispose wywołuj Dispose na obiekcie połączenia SQLiteConnection i ustaw zmienną na null. 
+
+- Wywołuj metodę Dispose klasy pomocniczej w zdarzeniu cyklu życia aplikacji OnSleep w App.xaml.cs. Ustaw także na null całe pole, w którym był trzymany obiekt klasy pomocniczej. 
+
+- W 2 pozostałych metodach cyklu życia OnStart i OnResume, możesz dodać inicjalizację bazy danych, tak jak w punkcie 3.d. Dodaj sprawdzanie, czy pole, do którego zapisujesz obiekt klasy pomocniczej jest nullem i tylko wtedy inicjalizuj go na nowo. 
+
+### 10. Przenieść operacje z API i bazą danych na inny wątek. 
+
+- Operacje te mogą trochę trwać, dlatego dobrze jest wykonywać je w tle. Użyj do tego metody Task.Run. Najlepiej zrób to na jak najwyższym poziomie, np. w metodzie inicjalizującej dane w HomeViewModel. 
+
+### 11. Dodaj odświeżanie listy wyników. 
+
+- Dodaj mechanizm pull to refresh do list na HomePage.xaml. 
+
+- Ustaw właściwość IsPullToRefreshEnabled na True. 
+
+- Zbinduj RefreshCommand. W komendzie odświeżaj dane dokładnie tak jak przy wczytywaniu strony. Możesz do obecnych metod dodać parametr typu bool, którym będziesz wymuszać odświeżanie (zamiast pobierania danych z bazy), gdy wywołujesz te metody z RefreshCommand. 
+
+- Zbinduj właściwość IsRefreshing. Ustawiaj ją na True na początku RefreshCommand i na False na końcu komendy. 
+
+ 
+
 ## Przydatne materiały: 
-- Api Airly: https://developer.airly.eu 
-- HttpClient: https://docs.microsoft.com/pl-pl/dotnet/api/system.net.http.httpclient?view=xamarinandroid-7.1 
-- HttpClient nagłówki: https://stackoverflow.com/a/38077835 
-- Kody odpowiedzi http: https://pl.wikipedia.org/wiki/Kod_odpowiedzi_HTTP 
-- UriBuilder: https://docs.microsoft.com/pl-pl/dotnet/api/system.uribuilder.query?view=xamarinandroid-7.1 
-- HttpUtility.ParseQueryString: https://docs.microsoft.com/pl-pl/dotnet/api/system.web.httputility.parsequerystring?view=xamarinandroid-7.1 
-- Jak używać nugeta: https://docs.microsoft.com/pl-pl/nuget/quickstart/install-and-use-a-package-in-visual-studio 
-- Xamarin.Essentials Geolocation: https://docs.microsoft.com/pl-pl/xamarin/essentials/geolocation?tabs=android 
-- ListView ItemsSource binding: https://stackoverflow.com/a/37727188 
-- ListView – wbudowane komórki (TextCell): https://docs.microsoft.com/pl-pl/samples/xamarin/xamarin-forms-samples/userinterface-listview-builtincells/ 
-- Komendy z parametrami: https://devblogs.microsoft.com/xamarin/simplifying-events-with-commanding/ 
-- Build action: https://docs.microsoft.com/pl-pl/visualstudio/ide/build-actions?view=vs-2019 
-- GetManifestResourceStream: https://stackoverflow.com/a/3314213 
-- ActivityIndicator: https://docs.microsoft.com/pl-pl/xamarin/xamarin-forms/user-interface/activityindicator
+
+- SQLite ORM: https://github.com/praeclarum/sqlite-net  
+
+- Dodatkowy poradnik do powyższego ORMa: https://docs.microsoft.com/pl-pl/xamarin/android/data-cloud/data-access/using-sqlite-orm  
+
+- Task.Run: https://docs.microsoft.com/pl-pl/dotnet/api/system.threading.tasks.task.run?view=xamarinandroid-7.1  
+
+- IDisposable: https://docs.microsoft.com/pl-pl/dotnet/api/system.idisposable?view=xamarinandroid-7.1  
+
+- Pull to refresh: https://xamarinhelp.com/pull-to-refresh-listview/  
 
 ## Dodatkowe materiały: 
-- Wydajność ListView: https://docs.microsoft.com/pl-pl/xamarin/xamarin-forms/user-interface/listview/performance
+
+- Szyfrowanie bazy: https://github.com/praeclarum/sqlite-net#using-sqlcipher  
+
+- SQLite.Net Extensions - umożliwia relacje: https://www.nuget.org/packages/SQLiteNetExtensions/  
+
+ 
+
+ 
