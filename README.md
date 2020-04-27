@@ -1,159 +1,92 @@
-# Laboratorium 4 
+# Laboratorium 5
 
 ## Zagadnienia 
 
-- Lokalna baza danych – SQLite 
+- Komponent mapy
 
 ## Zadania 
 
-### 1. Zainstaluj paczkę do bazy danych. 
-
-- Zainstaluj do projektu wspólnego oraz androidowego paczkę nuget sqlite-net-pcl. 
-
-### 2. Stwórz model bazy danych. 
-
-- Paczka, której używamy nie wspiera relacji, musimy więc stworzyć je ręcznie. Nie możemy polegać na właściwościach o pożądanym typie, tylko na kluczach. 
-
-- Nie możemy przechowywać także list, więc najlepiej przerobić je na właściwość typu string i zserializować np. do jsona. 
-
-- Możemy użyć istniejących klas AirQualityIndex, AirQualityStandard i MeasurementValue. Dodajmy tylko do nich właściwość Id typu int z atrybutami PrimaryKey i AutoIncrement. 
-
-- Dla klas Installation, MeasurementItem i Measurement stwórzmy nowe klasy, np. z dopiskiem Entity w nazwie.  
-
-- W każdej musimy dodać Id. W InstallationEntity Id można dać jako string (dostajemy je z API). 
-
-- W InstallationEntity Location i Address można dać jako string - będziemy je serializować do jsona.  
-
-- W MeasurementItemEntity wszystkie właściwości, które są tablicami, zamieniamy na stringi. Będziemy serializować do nich listy Id z właściwości Values, Indexes i Standards. 
-
-- W MeasurementEntity właściwości Current i Installation zamieniamy na ich Id (typ int). 
-
-- Reszta właściwości może pozostać bez zmian. 
-
-- Do wszystkich klas dodaj konstruktor bez parametrów. Później będziemy dodawać inne konstruktory, ale konstruktor bez parametrów też jest wymagany przez biblioteki do jsona i sqlita. 
-
-### 3. Dodaj klasę pomocniczą do bazy danych. 
-
-- Dodaj nową klasę DatabaseHelper. 
-
-- Utwórz w nim połączenie do bazy SQLiteConnection i zapisz je w polu klasy. Żeby uniknąć problemów z wielowątkowością użyj flag SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.FullMutex do otwarcia połączenia. 
-
-- Stwórz tabele dla wszystkich niezbędnych klas: InstallationEntity, MeasurementEntity, MeasurementItemEntity, MeasurementValue, AirQualityIndex, AirQualityStandard. 
-
-- Stwórz instancję klasy pomocniczej w App.xaml.cs, wywołaj metodę inicjaluzującą (to co robiliśmy w punktach wyżej) przed wczytaniem pierwszej strony i zapisz w statycznym polu - będziesz go później używać wszędzie, gdzie będziesz chciał skorzystać z bazy. 
-
-### 4. Użyj klasy pomocniczej do zapisywania instalacji z API Airly. 
-
-- Stwórz w klasie pomocniczej nową metodę do zapisu danych. 
-
-- W parametrze przekazuj listę obiektów Installation. 
-
-- Przemapuj te obiekty na InstallationEntity. Możesz stworzyć odpowiedni konstruktor w InstallationEntity. 
-
-- W transakcji, wyczyść tabelę i zapisz nowe dane. 
-
-- Wywołaj metodę po pobraniu instalacji z api. 
-
-### 5. Użyj klasy pomocniczej do zapisywania pomiarów z API Airly. 
-
-- Stwórz w klasie pomocniczej nową metodę do zapisu danych. 
-
-- W parametrze przekazuj listę obiektów Measurement. 
-
-- Wykonuj wszystkie operacje w transakcji. 
-
-- Usuń wszystkie poprzednie dane ze wszystkich tabel, oprócz tabeli z instalacjami. 
-
-- W pętli, dla każdego pomiaru: 
-
-- Dodaj do bazy metodą InsertAll dane z właściwości Values, Indexes i Standards (dla obecnego pomiaru - właściwość Current). W InsertAll możesz przekazać w drugim parametrze, żeby nie używać transakcji – i tak już w jednej jesteśmy. Właściwości Id w dodanych obiektach ustawią się na nowe wartości. 
-
-- Przemapuj właściwość Current na MeasurementItemEntity i dodaj do bazy. 
-
-- Stwórz i wypełnij obiekt MeasurementEntity i dodaj go do bazy. 
-
-- Wywołaj metodę po pobraniu instalacji z api. 
-
-### 6. Użyj klasy pomocniczej do odczytywania instalacji. 
-
-- W nowej metodzie pobierz z bazy wszystkie obiekty typu InstallationEntity. Przemapuj je na typ Installation (np. przez odpowiedni konstruktor) i zwróć. 
-
-- Do właściwości Address i Location będziesz musiał zdeserializować jsona. 
-
-### 7. Użyj klasy pomocniczej do odczytywania pomiarów. 
-
-- W nowej metodzie pobierz z bazy wszystkie obiekty typu MeasurementEntity. 
-
-- Dla każdego id instalacji pobierz z bazy InstallationEntity o takim kluczu i przemapuj na typ Installation. 
-
-- Dla każdego id obecnego MeasurementItemEntity, pobierz obiekt o takim kluczu z bazy i stwórz z niego MeasurementItem. 
-
-- Zdeserializuj wszystkie jsony na tablice intów. 
-
-- Pobierz z bazy obiekty MeasurementValue, AirQualityIndex i AirQualityStandard z kluczami uzyskanymi w punkcie wyżej. 
-
-- Stwórz z tych danych obiekt MeasurementItem 
-
-### 8. Użyj metod do pobierania danych z bazy w kodzie. 
-
-- Chcemy w pierwszej kolejności korzystać z danych w bazie. Jeśli będą one stare, wtedy chcemy pobierać dane z API Airly. Aktualność danych będziemy sprawdzać na podstawie właściwości Current.TillDateTime w pomiarze. Jeśli jest on starszy niż godzina, pobierzemy nowe dane. Jeśli nie, to wyświetlimy dane z bazy (nawet przy ponownym uruchomieniu aplikacji). 
-
-- Zwróć uwagę, że czas w API Airly jest w strefie UTC. 
-
-- W metodzie, gdzie pobierasz instalacje z API Airly (w HomeViewModel), użyj metody do odczytu pomiarów z bazy. Sprawdź czy są tam jakieś pomiary i czy właściwość TillDateTime ma odpowiednią wartość. Na tej postawie albo pobierz dane z API albo z bazy. 
-
-- Zrób podobną rzecz w metodzie, gdzie pobierasz pomiary z API. 
-
-- Właściwość CurrentDisplayValue  w pomiarze możesz mieć zapisane w bazie, ale niekoniecznie. Skoro i tak to obliczamy, to można tego pola nie trzymać w bazie, tylko dalej liczyć tutaj - niezależnie czy dla wyników z API, czy z bazy. 
-
-- Logikę sprawdzającą, czy pobieramy rzeczy z API, czy wczytujemy z bazy, możesz wydzielić do oddzielnej metody, gdyż w obu przypadkach będzie taka sama. 
-
-### 9. Zamknij połączenie do bazy. 
-
-- W aplikacjach mobilnych dobrze jest używać jednego połączenia do bazy i zamykać je dopiero, gdy kończymy z niego korzystać, np. gdy zamykamy aplikację. 
-
-- Zaimplementuj interfejs IDisposable w klasie pomocniczej do bazy danych. 
-
-- W metodzie Dispose wywołuj Dispose na obiekcie połączenia SQLiteConnection i ustaw zmienną na null. 
-
-- Wywołuj metodę Dispose klasy pomocniczej w zdarzeniu cyklu życia aplikacji OnSleep w App.xaml.cs. Ustaw także na null całe pole, w którym był trzymany obiekt klasy pomocniczej. 
-
-- W 2 pozostałych metodach cyklu życia OnStart i OnResume, możesz dodać inicjalizację bazy danych, tak jak w punkcie 3.d. Dodaj sprawdzanie, czy pole, do którego zapisujesz obiekt klasy pomocniczej jest nullem i tylko wtedy inicjalizuj go na nowo. 
-
-### 10. Przenieść operacje z API i bazą danych na inny wątek. 
-
-- Operacje te mogą trochę trwać, dlatego dobrze jest wykonywać je w tle. Użyj do tego metody Task.Run. Najlepiej zrób to na jak najwyższym poziomie, np. w metodzie inicjalizującej dane w HomeViewModel. 
-
-### 11. Dodaj odświeżanie listy wyników. 
-
-- Dodaj mechanizm pull to refresh do list na HomePage.xaml. 
-
-- Ustaw właściwość IsPullToRefreshEnabled na True. 
-
-- Zbinduj RefreshCommand. W komendzie odświeżaj dane dokładnie tak jak przy wczytywaniu strony. Możesz do obecnych metod dodać parametr typu bool, którym będziesz wymuszać odświeżanie (zamiast pobierania danych z bazy), gdy wywołujesz te metody z RefreshCommand. 
-
-- Zbinduj właściwość IsRefreshing. Ustawiaj ją na True na początku RefreshCommand i na False na końcu komendy. 
-
- 
-
-## Przydatne materiały: 
-
-- SQLite ORM: https://github.com/praeclarum/sqlite-net  
-
-- Dodatkowy poradnik do powyższego ORMa: https://docs.microsoft.com/pl-pl/xamarin/android/data-cloud/data-access/using-sqlite-orm  
-
-- Task.Run: https://docs.microsoft.com/pl-pl/dotnet/api/system.threading.tasks.task.run?view=xamarinandroid-7.1  
-
-- IDisposable: https://docs.microsoft.com/pl-pl/dotnet/api/system.idisposable?view=xamarinandroid-7.1  
-
-- Pull to refresh: https://xamarinhelp.com/pull-to-refresh-listview/  
-
-## Dodatkowe materiały: 
-
-- Szyfrowanie bazy: https://github.com/praeclarum/sqlite-net#using-sqlcipher  
-
-- SQLite.Net Extensions - umożliwia relacje: https://www.nuget.org/packages/SQLiteNetExtensions/  
-
- 
-
+### 1. Pusty ekran przygotowany pod osadzenie mapy.
+- Dodaj nowy widok content page o nazwie - MapPage
+- Dodaj nowo dodaną stronę jako tab w pliku RootTabbedPage.xaml
+- Dodaj ikonę mapy do AirMonitor.Android.Resources.drawable i nazwij ją np. baseline_map_black_24.png
+- Podmień tytuł i ikonę w pliku RootTabbedPage.xaml
+- Uruchom aplikację i sprawdź zcy masz nową kartę na dole ekranu.
+
+### 2. Dodanie pakietu mapy
+- Za pomocą menadżera NuGet dodaj pakiet: Xamarin.Forms.Maps
+- W pliku AirMonitor.Android.MainActivity.cs poniżej wywołania funkcji `Xamarin.Forms.Forms.Init`; dodaj kod inicjalizacyjny z pakietu mapy - `Xamarin.FormsMaps.Init`;
+
+
+### 3. Konfiguracja Google Maps
+- Utwórz klucz API map Google wg instrukcji https://developers.google.com/maps/documentation/android-sdk/get-api-key	
+- Dodaj do AirMonitor.Android.Properties/AndroidManifest.xml element:
+`<application ...>`
+ `   <meta-data android:name="com.google.android.geo.API_KEY" android:value="PASTE-YOUR-API-KEY-HERE" />`
+    `<meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />`
+    `<uses-library android:name="org.apache.http.legacy" android:required="false" />    `
+`</application>`
+- Jeśli wcześniej tego nie robiłeś w AndroidManifest.xml dodaj pozwolenia dotyczące lokalzacji:
+  `<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />`
+  `<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />`
+- Andorid w wersji 6.0 kub wyższej wymaga żądanie pozwolenia o pozwolenia w czesie działania aplikacji. Dodaj kod odpowiedzialny za żądanie na podstawie poradnika: https://docs.microsoft.com/en-us/xamarin/xamarin-forms/user-interface/map/setup#request-runtime-location-permissions
+- W pliku MapPage.xaml dodaj do ContentPage.Content komponent mapy -` <maps:Map x:Name="map" /> `oraz dołóż deklaracje namespace albo Alt+Enter i wybierz Xamarin.Forms.Map, albo dodaj do taga Content Page - `xmlns:maps="clr-namespace:Xamarin.Forms.Maps;assembly=Xamarin.Forms.Maps"`
+- W tym momencie uruchom aplikację. Powinieneś zobaczyć nowo dodany widokmapę pod zakładką Map. To już dobry symptom jeśli działa.
+
+### 4. Elementy na mapie
+- W pliku MapPage.xaml w komponencie mapy dodaj tag `IsShowingUser="True"`. Teraz powinieneś w prawym górnym rogu mapy zobaczyć przycisk do centrowania na Twoją lokalizację.
+- Teraz dodamy pinezki na mapę. Są dwie opcje, albo dodajemy pojedynczo, albo bindujemy podobnie jak w liście. Zastosujemy drugie podejście.
+- Spójrz na kod który dodamy w MapPage.xaml:
+	`	<maps:Map x:Name="map"
+                  IsShowingUser="True"
+                  ItemsSource="{Binding Locations}"
+                  >
+            <maps:Map.ItemTemplate>
+                <DataTemplate>
+                    <maps:Pin Position="{Binding Position}"
+                              Address="{Binding Address}"
+                              Label="{Binding Description}" 
+                              />
+                </DataTemplate>
+            </maps:Map.ItemTemplate>
+        </maps:Map>`
+- Mamy parametr ItemsSource. Jak się domyślasz jeszcze nie istnieje, ale zaraz go dodasz. Wewnątrz mamy template, któy obsługuje wyświetlanie już samej pinezki. Ma ona parametry takie jak pozycja, adres i opis.
+- Teraz jak kwestię widoku mamy ograną pobawmy się modelem danych. W tym celu w pakiecie AirMonitor.Models utwórz klasę MapLocation. Powinnaa ona zawierać pola jak: Address (typu string), Description (typu string) oraz Position(typu Xamarin.Forms.Maps.Position). Pamiętaj, aby klasa była widoczna spoza pakietu. W tym celu dodaj modyfikator widoczności public przed nazwą klasy.
+- Teraz z modelu przechodzimy do viewmodelu. Jak dobrze pamiętasz z laboratorium 3 o listach w ViewModelu musimy utworzyć listę Locations która zawiera elementy nowo dodanego MapLocation. Ale słusznie możesz się zastanawiać w jakim view modelu to zrobić. Możemy utworzyć nowy, ale kod do pobierania danych już mamy w HomeViewModel. I to właśnie w nim dodaj tą listę Locations na wzór listy Items. Masz rację, tutaj łamiemy SOLID, możemy zastosować dziedziczenie, wstrzykiwanie zależności. Jednak na cele dzisiejszych ćwiczeń wystarczy jak zrobisz w taki sposób.
+- Mając już pole public List<MapLocation> Locations możemy przystąpić do uzupełnenia tego w momencie kiedy przychodzą do aplikacji dane z API czy bazy danych.
+Poniżej przypisania: Items = new List<Measurement>(data); 
+Dodaj kod uzupełniający Locations.
+`Locations = Items.Select(i => new MapLocation { 
+	Address = i.Installation.Address.Description,
+	Description = "CAQI: " + i.CurrentDisplayValue,
+	Position = new Position(i.Installation.Location.Latitude, i.Installation.Location.Longitude)            
+}).ToList();`
+- Jesteś na dobrej drodze do zobaczenia danych na mapie. Teraz wystarczy, że w pliku MapPage.xaml.cs zbindujesz HomeViewModel. Jeśli masz problem zobacz jak zostało to zrobione w klasie HomePage.xaml.cs.
+- Voila! Uruchom program i zobacz pinezki na mapię wokół Twojej lokalizacji. Klinkij na nią i zobaczysz InfoWindow z podstawowymi parametrami.
+
+### 5. Przejście an szczegóły
+- Ostatnią częścią dzisiejszego laboratorium będzie przejście na szczegóły z ekranu mapy.
+- Dodaj parametr InfoWindowClicked w widoku pinezki
+`	<maps:Pin Position="{Binding Position}"
+	              Address="{Binding Address}"
+	              Label="{Binding Description}" 
+	              InfoWindowClicked="InfoWindow_ItemTapped"
+	              />`
+- Teraz stwórz metodę `InfoWindow_ItemTapped` w pliku MapPage.xaml.cs. Jej sygnatura powinna przypominać tą, która jest w pliku HomePage.xaml.cs i odpowiada za kliknięcie na liście.
+- Mam złą informację. Nie możemy wywołąć tej samej komendy jak w przypadku kliknięcia na liście. Tam mieliśmy dostęp do obiektu Measurment. W momencie kliknięcia na mapę dostajemy jako event obiekt typu Pin. Nie załamujemy się i alternatywnym rozwiązaniem jest stworzenie nowej, własnej komendy w HomeViewModel np. InfoWindowClickedCommand na wzór GoToDetailsCommand.
+- Co prawda nie mamy dostępu do obiektu measurment, ale mam dostęp do wszystkich pól z klasy Pin. Mamy między innymi dostęp do pola adres. Więc właśnie adres przekażmy jako string to ViewModelu
+`_viewModel.InfoWindowClickedCommand.Execute((sender as Xamarin.Forms.Maps.Pin).Address);`
+- A w ViewModelu wystarczy, że znajdziemy MEasurment z listy Items o danym adresie. Można to zrobić np. w ten sposób:
+          ` Measurement item = Items.First<Measurement>(i => i.Installation.Address.Description.Equals(address));`
+- Mając measurment możemy już wywołać funkcję, która otwiera nam widok szczegółowy.
+- Uruchom, sprawdź czy działa, kliknij w pinezkę, okienko na mapie i zobacz ekran szczegółów.
+
+
+### Przydatne materiały:
+- https://docs.microsoft.com/en-us/xamarin/xamarin-forms/user-interface/map/setup
+- https://docs.microsoft.com/en-us/xamarin/xamarin-forms/user-interface/map/map
+- https://docs.microsoft.com/en-us/xamarin/xamarin-forms/user-interface/map/pins
+
+### Dodatkowe materiały:
+- Jeśli chcesz zmodyfikować kolor pinezki, aby odpowiadał stanowi powietrze spróuj zrobić CustomRenderer https://docs.microsoft.com/en-us/xamarin/xamarin-forms/app-fundamentals/custom-renderer/map/customized-pin
  
