@@ -64,7 +64,7 @@ Dodaj kod uzupełniający Locations.
 - Jesteś na dobrej drodze do zobaczenia danych na mapie. Teraz wystarczy, że w pliku MapPage.xaml.cs zbindujesz HomeViewModel. Jeśli masz problem zobacz jak zostało to zrobione w klasie HomePage.xaml.cs.
 - Voila! Uruchom program i zobacz pinezki na mapię wokół Twojej lokalizacji. Klinkij na nią i zobaczysz InfoWindow z podstawowymi parametrami.
 
-### 5. Przejście an szczegóły
+### 5. Przejście na szczegóły
 - Ostatnią częścią dzisiejszego laboratorium będzie przejście na szczegóły z ekranu mapy.
 - Dodaj parametr InfoWindowClicked w widoku pinezki
 `	<maps:Pin Position="{Binding Position}"
