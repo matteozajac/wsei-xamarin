@@ -154,6 +154,10 @@
 
 - SQLite.Net Extensions - umożliwia relacje: https://www.nuget.org/packages/SQLiteNetExtensions/  
 
+- DB Browser for SQLite - przeglądanie zawartości bazy: https://sqlitebrowser.org
+
+- Przeglądanie plików na androidzie (emulator) - do znalezienia pliku bazy danych (potrzebne Android Studio): https://developer.android.com/studio/debug/device-file-explorer
+
  
 
  
